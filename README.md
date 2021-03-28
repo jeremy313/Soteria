@@ -15,12 +15,16 @@ To evaluate our defense, we conduct experiments on MNIST and CIFAR10 for defendi
 We provide the implementation of our defense against DLG attack and GS attack. Our code is developed based on [DLG original repo](https://github.com/mit-han-lab/dlg) and [GS original repo](https://github.com/JonasGeiping/invertinggradients).
 
 ### Setup
-
 '''
 pytorch=1.2.0
+
 torchvision=0.4.0
 '''
 
 ### Quick start
 
-For DLG attack, you can change the pruning rate of our defense by changing the par
+For DLG attack, you can change the pruning rate of our defense by changing the percentile parameter in
+
+'''
+thresh = np.percentile(deviation_f1_x_norm_sum.flatten().cpu().numpy(), 1)
+'''
