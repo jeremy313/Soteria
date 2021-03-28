@@ -14,16 +14,27 @@ To evaluate our defense, we conduct experiments on MNIST and CIFAR10 for defendi
 
 We provide the implementation of our defense against DLG attack and GS attack. Our code is developed based on [DLG original repo](https://github.com/mit-han-lab/dlg) and [GS original repo](https://github.com/JonasGeiping/invertinggradients).
 
-### Setup
+## Setup
 ```
 pytorch=1.2.0
 torchvision=0.4.0
 ```
 
-### Quick start
+## Quick start
 
+### DLG attack
 For DLG attack, you can change the pruning rate of our defense by changing the percentile parameter in
-
 ```
 thresh = np.percentile(deviation_f1_x_norm_sum.flatten().cpu().numpy(), 1)
+```
+We also provide the implementation of model compression defense. You can uncomment the corresponding code to try it.
+
+### GS attack
+For GS attack, you can reproduce the results of the car image in the paper by running
+```
+python reconstruct_image.py --target_id=-1 --defense=ours --pruning_rate=60 --save_image
+```
+You can try model compression defense by running 
+```
+python reconstruct_image.py --target_id=-1 --defense=prune --pruning_rate=60 --save_image
 ```
