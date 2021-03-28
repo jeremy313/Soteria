@@ -21,8 +21,6 @@ def options():
     parser.add_argument('--label_flip', action='store_true', help='Dishonest server permuting weights in classification layer.')
 
     # Rec. parameters
-    parser.add_argument('--optim', default='ours', type=str, help='Use our reconstruction method or the DLG method.')
-
     parser.add_argument('--restarts', default=1, type=int, help='How many restarts to run.')
     parser.add_argument('--cost_fn', default='sim', type=str, help='Choice of cost function.')
     parser.add_argument('--indices', default='def', type=str, help='Choice of indices from the parameter list.')
@@ -42,7 +40,6 @@ def options():
 
     parser.add_argument('--image_path', default='images_new/', type=str)
     parser.add_argument('--model_path', default='models/', type=str)
-    parser.add_argument('--table_path', default='tables/', type=str)
     parser.add_argument('--data_path', default='~/data', type=str)
 
     # Debugging:
@@ -53,5 +50,5 @@ def options():
     # Defense strategy:
     parser.add_argument('--defense', default='no', type=str, help='defense strategy.')
     parser.add_argument('--pruning_rate', default=0, type=float, help='pruning rate for defense.')
-    parser.add_argument('--noise_sigma', default=1e-4, type=float, help='noise sigma')
+    
     return parser

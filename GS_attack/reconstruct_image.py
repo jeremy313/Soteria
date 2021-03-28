@@ -82,58 +82,57 @@ if __name__ == "__main__":
     img_shape = (3, ground_truth.shape[2], ground_truth.shape[3])
 
     # Run reconstruction
-    if args.accumulation == 0:
-        model.zero_grad()
-        ground_truth.requires_grad = True
-        target_loss, _, _ = loss_fn(model(ground_truth), labels)
-        if args.model in ['LeNet', 'ConvNet'] and args.defense == 'ours':
-            print("applying our defense strategy...")
-            feature_fc1_graph = model.extract_feature()
-            deviation_f1_target = torch.zeros_like(feature_fc1_graph)
-            deviation_f1_x_norm = torch.zeros_like(feature_fc1_graph)
-            for f in range(deviation_f1_x_norm.size(1)):
-                deviation_f1_target[:,f] = 1
-                feature_fc1_graph.backward(deviation_f1_target, retain_graph=True)
-                deviation_f1_x = ground_truth.grad.data
-                deviation_f1_x_norm[:,f] = torch.norm(deviation_f1_x.view(deviation_f1_x.size(0), -1), dim=1)/(feature_fc1_graph.data[:,f] + 0.1)
-                model.zero_grad()
-                ground_truth.grad.data.zero_()
-                deviation_f1_target[:,f] = 0
-            deviation_f1_x_norm_sum = deviation_f1_x_norm.sum(axis=0)
-            thresh = np.percentile(deviation_f1_x_norm_sum.flatten().cpu().numpy(), args.pruning_rate)
-            mask = np.where(abs(deviation_f1_x_norm_sum.cpu()) < thresh, 0, 1).astype(np.float32)
+    model.zero_grad()
+    ground_truth.requires_grad = True
+    target_loss, _, _ = loss_fn(model(ground_truth), labels)
+    if args.model in ['LeNet', 'ConvNet'] and args.defense == 'ours':
+        print("applying our defense strategy...")
+        feature_fc1_graph = model.extract_feature()
+        deviation_f1_target = torch.zeros_like(feature_fc1_graph)
+        deviation_f1_x_norm = torch.zeros_like(feature_fc1_graph)
+        for f in range(deviation_f1_x_norm.size(1)):
+            deviation_f1_target[:,f] = 1
+            feature_fc1_graph.backward(deviation_f1_target, retain_graph=True)
+            deviation_f1_x = ground_truth.grad.data
+            deviation_f1_x_norm[:,f] = torch.norm(deviation_f1_x.view(deviation_f1_x.size(0), -1), dim=1)/(feature_fc1_graph.data[:,f] + 0.1)
+            model.zero_grad()
+            ground_truth.grad.data.zero_()
+            deviation_f1_target[:,f] = 0
+        deviation_f1_x_norm_sum = deviation_f1_x_norm.sum(axis=0)
+        thresh = np.percentile(deviation_f1_x_norm_sum.flatten().cpu().numpy(), args.pruning_rate)
+        mask = np.where(abs(deviation_f1_x_norm_sum.cpu()) < thresh, 0, 1).astype(np.float32)
 
-        input_gradient = torch.autograd.grad(target_loss, model.parameters())
-        input_gradient = [grad.detach() for grad in input_gradient]
-        if args.model == 'LeNet' and args.defense == 'ours':
-            input_gradient[8] = input_gradient[8] * torch.Tensor(mask).to(**setup)
-        elif args.model == 'ConvNet' and args.defense == 'ours':
-            input_gradient[-2] = input_gradient[-2] * torch.Tensor(mask).to(**setup)
-        if args.defense == 'prune':
-            for i in range(len(input_gradient)):
-                grad_tensor = input_gradient[i].cpu().numpy()
-                flattened_weights = np.abs(grad_tensor.flatten())
-                # Generate the pruning threshold according to 'prune by percentage'. (Your code: 1 Line) 
-                thresh = np.percentile(flattened_weights, args.pruning_rate)
-                grad_tensor = np.where(abs(grad_tensor) < thresh, 0, grad_tensor)
-                input_gradient[i] = torch.Tensor(grad_tensor).to(**setup)
-        full_norm = torch.stack([g.norm() for g in input_gradient]).mean()
-        print(f'Full gradient norm is {full_norm:e}.')
+    input_gradient = torch.autograd.grad(target_loss, model.parameters())
+    input_gradient = [grad.detach() for grad in input_gradient]
+    if args.model == 'LeNet' and args.defense == 'ours':
+        input_gradient[8] = input_gradient[8] * torch.Tensor(mask).to(**setup)
+    elif args.model == 'ConvNet' and args.defense == 'ours':
+        input_gradient[-2] = input_gradient[-2] * torch.Tensor(mask).to(**setup)
+    if args.defense == 'prune':
+        for i in range(len(input_gradient)):
+            grad_tensor = input_gradient[i].cpu().numpy()
+            flattened_weights = np.abs(grad_tensor.flatten())
+            # Generate the pruning threshold according to 'prune by percentage'. (Your code: 1 Line) 
+            thresh = np.percentile(flattened_weights, args.pruning_rate)
+            grad_tensor = np.where(abs(grad_tensor) < thresh, 0, grad_tensor)
+            input_gradient[i] = torch.Tensor(grad_tensor).to(**setup)
+    full_norm = torch.stack([g.norm() for g in input_gradient]).mean()
+    print(f'Full gradient norm is {full_norm:e}.')
 
-        config = dict(signed=args.signed,
-                      boxed=args.boxed,
-                      cost_fn=args.cost_fn,
-                      indices='def',
-                      weights='equal',
-                      lr=0.1,
-                      optim=args.optimizer,
-                      restarts=args.restarts,
-                      max_iterations=24_000,
-                      total_variation=args.tv,
-                      init='randn',
-                      filter='none',
-                      lr_decay=True,
-                      scoring_choice='loss')
+    config = dict(signed=args.signed,
+                  boxed=args.boxed,
+                  cost_fn=args.cost_fn,
+                  indices='def',
+                  weights='equal',
+                  lr=0.1,
+                  optim=args.optimizer,
+                  restarts=args.restarts,
+                  max_iterations=24_000,
+                  total_variation=args.tv,
+                  init='randn',
+                  filter='none',
+                  lr_decay=True,
+                  scoring_choice='loss')
     rec_machine = inversefed.GradientReconstructor(model, (dm, ds), config, num_images=args.num_images)
     output, stats = rec_machine.reconstruct(input_gradient, labels, img_shape=img_shape, dryrun=args.dryrun)
 
