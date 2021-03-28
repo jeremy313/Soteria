@@ -1,0 +1,5 @@
+model	dataset	trained	accumulation	restarts	OPTIM	cost_fn	indices	weights	scoring	init	tv	rec_loss	psnr	test_mse	feat_mse	target_id	seed	timing	dtype	epochs	val_acc	rec_img	gt_img
+ConvNet	CIFAR10	False	0	1	ours	sim	def	equal	loss	randn	0.0001	0.025931179523468018	11.65192985534668	1.0887079238891602	2.809480825760602e-08	-1	3347000720	0:07:46.715955	torch.float32	120		a_ConvNet_sim--1-ours-60.0.png	a_ground_truth--1.png
+ConvNet	CIFAR10	False	0	1	ours	sim	def	equal	loss	randn	0.0001	0.02322554588317871	12.193288803100586	0.9611152410507202	3.521862979027901e-08	-1	986690136	0:00:30.361814	torch.float32	120		a_ConvNet_sim--1-ours-60.0.png	a_ground_truth--1.png
+ConvNet	CIFAR10	False	0	1	ours	sim	def	equal	loss	randn	0.0001	0.027919650077819824	11.608917236328125	1.099543571472168	7.439090410343852e-08	-1	1404045642	0:00:21.874150	torch.float32	120		a_ConvNet_sim--1-ours-60.0.png	a_ground_truth--1.png
+ConvNet	CIFAR10	False	0	1	ours	sim	def	equal	loss	randn	0.0001	0.022350609302520752	12.093661308288574	0.9834181666374207	1.433712970566603e-08	-1	312501444	0:00:23.659192	torch.float32	120		a_ConvNet_sim--1-ours-60.0.png	a_ground_truth--1.png
