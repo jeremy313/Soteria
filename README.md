@@ -10,9 +10,10 @@ However, recent works have demonstrated that sharing model updates makes FL vuln
 Based on this observation, we propose a defense against model inversion attack in FL. The key idea of our defense is learning to perturb data representation such that the quality of the reconstructed data is severely degraded, while FL performance is maintained. In addition, we derive certified robustness guarantee to FL and convergence guarantee to FedAvg after applying our defense. 
 To evaluate our defense, we conduct experiments on MNIST and CIFAR10 for defending against the DLG attack and GS attack. Without sacrificing accuracy, the results demonstrate that our proposed defense can increase the mean squared error between the reconstructed data and the raw data by as much as 160$\times$ for both DLG attack and GS attack, compared with baseline defense methods. Therefore, the privacy of the FL system is significantly improved.
 
-Comparing our defense with Gradient Compression defense under GS attack|  
-:-------------------------:|
-<div align=center><img src="https://github.com/jeremy313/FLDRep/blob/main/GS_defense.png" width="800" height="400" alt="show"/><br/></div> |
+
+<div align=center><img src="https://github.com/jeremy313/FLDRep/blob/main/GS_defense.png" width="800" height="400" alt="show"/><br/>
+<Comparing our defense with Gradient Compression defense under GS attack>
+</div> 
 
 
 ## Code
