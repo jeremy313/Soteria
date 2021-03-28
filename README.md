@@ -45,4 +45,4 @@ You can try model compression defense by running
 python reconstruct_image.py --target_id=-1 --defense=prune --pruning_rate=60 --save_image
 ```
 ## Remark
-Considering computing efficiency, we use ||r||/||d(f(r))/dX|| to approximate ||r(d(f(r))/dX)^-1|| in the code. You can edit the code to compute ||r(d(f(r))/dX)^-1|| directly, then you can achieve better defense efficiency with higher computation cost.
+Considering computing efficiency, we use ||r||/||d(f(r))/dX|| to approximate ||r(d(f(r))/dX)^-1|| in the code. You can edit the code to compute ||r(d(f(r))/dX)^-1|| directly, then you can achieve better defense results with higher computation cost.
