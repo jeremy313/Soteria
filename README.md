@@ -12,7 +12,7 @@ To evaluate our defense, we conduct experiments on MNIST and CIFAR10 for defendi
 
 
 <div align=center><img src="https://github.com/jeremy313/FLDRep/blob/main/GS_defense.png" width="800" height="400" alt="show"/><br/>
-<Comparing our defense with Gradient Compression defense under GS attack>
+Comparing our defense with Gradient Compression defense under GS attack
 </div> 
 
 
